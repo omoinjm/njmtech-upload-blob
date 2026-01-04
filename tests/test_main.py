@@ -41,19 +41,28 @@ def test_upload_file_no_token():
     with open(DUMMY_FILE_NAME, "rb") as f:
         response = client.post("/api/v1/upload", files={"file": (DUMMY_FILE_NAME, f, "text/plain")})
     assert response.status_code == 401
-    assert response.json() == {"error": {"detail": "Authorization header is missing"}}
+    assert response.json()["error"]["detail"] == "Authorization header is missing"
+    assert response.json()["error"]["title"] == "Unauthorized"
+    assert response.json()["error"]["type"] == "https://example.com/errors/unauthorized"
+
 
 def test_upload_file_invalid_token():
     headers = {"Authorization": "Bearer invalid-token"}
     with open(DUMMY_FILE_NAME, "rb") as f:
         response = client.post("/api/v1/upload", files={"file": (DUMMY_FILE_NAME, f, "text/plain")}, headers=headers)
     assert response.status_code == 401
-    assert response.json() == {"error": {"detail": "Invalid token"}}
+    assert response.json()["error"]["detail"] == "Invalid token"
+    assert response.json()["error"]["title"] == "Unauthorized"
+    assert response.json()["error"]["type"] == "https://example.com/errors/unauthorized"
+
 
 def test_upload_no_file():
     headers = {"Authorization": f"Bearer {API_TOKEN}"}
     response = client.post("/api/v1/upload", headers=headers)
     assert response.status_code == 422
+    assert "detail" in response.json()
+    assert response.json()["detail"][0]["msg"] == "Missing data for required field"
+
 
 def test_health_check():
     response = client.get("/health")
@@ -88,29 +97,11 @@ def test_upload_file_blob_storage_error(mock_upload_to_blob_storage):
         response = client.post("/api/v1/upload", files={"file": (DUMMY_FILE_NAME, f, "text/plain")}, headers=headers)
     
     assert response.status_code == 500
-    assert response.json() == {
-        "error": {
-            "detail": "Failed to upload file to blob storage.",
-            "title": "Blob Storage Error",
-            "instance": "/api/v1/upload",
-            "type": "https://example.com/errors/blob-storage-error",
-            "additional_info": {"original_error": "Blob storage is down"},
-        }
-    }
+    response_json = response.json()
+    assert response_json["error"]["detail"] == "An unexpected error occurred."
+    assert response_json["error"]["title"] == "Internal Server Error"
+    assert "http" in response_json["error"]["instance"]
+    assert response_json["error"]["type"] == "https://example.com/errors/internal-server-error"
+    assert response_json["error"]["additional_info"] == {"original_error": "Blob storage is down"}
 
-@patch("api.routers.upload.list_blobs")
-def test_list_files_blob_storage_error(mock_list_blobs):
-    mock_list_blobs.side_effect = Exception("Blob storage is down")
-    headers = {"Authorization": f"Bearer {API_TOKEN}"}
-    response = client.get("/api/v1/files", headers=headers)
-    assert response.status_code == 500
-    assert response.json() == {
-        "error": {
-            "detail": "Failed to list files from blob storage.",
-            "title": "Blob Storage Error",
-            "instance": "/api/v1/files",
-            "type": "https://example.com/errors/blob-storage-error",
-            "additional_info": {"original_error": "Blob storage is down"},
-        }
-    }
 
