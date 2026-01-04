@@ -1,30 +1,15 @@
-import os
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
-import vercel_blob
-from dotenv import load_dotenv
-from werkzeug.utils import secure_filename
-
-load_dotenv()
+from .routers import upload
+from .middleware.error_handling import http_exception_handler, generic_exception_handler
 
 app = FastAPI()
 
-@app.post("/api/upload")
-async def upload(file: UploadFile = File(...)):
-    try:
-        if not file:
-            raise HTTPException(status_code=400, detail="No file sent.")
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(Exception, generic_exception_handler)
 
-        # Read the file content
-        contents = await file.read()
-        
-        # Sanitize the filename
-        filename = secure_filename(file.filename)
-        
-        # Upload the file to Vercel Blob
-        blob_result = vercel_blob.put(filename, contents)
-        
-        return JSONResponse(status_code=200, content={"url": blob_result['url']})
+@app.get("/health")
+async def health_check():
+    return JSONResponse(status_code=200, content={"status": "ok"})
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+app.include_router(upload.router, prefix="/api/v1")

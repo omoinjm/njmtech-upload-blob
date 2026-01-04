@@ -1,5 +1,19 @@
 # NJMTech Upload Blob API
 
+## Tech Stack
+
+This project is built using the following technologies:
+
+*   **Python**: The core programming language.
+*   **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
+*   **Vercel Blob**: A serverless, scalable, and cost-efficient object storage solution for the web.
+*   **Uvicorn**: A lightning-fast ASGI server, used to run the FastAPI application.
+*   **python-dotenv**: Manages environment variables, loading them from a `.env` file.
+*   **Werkzeug**: A comprehensive WSGI web application library, used here for secure filename handling.
+*   **Pytest**: A mature full-featured Python testing framework.
+
+
+
 This is a simple FastAPI application to upload files to Vercel Blob storage.
 
 ## Setup
