@@ -28,6 +28,22 @@ This is a simple FastAPI application to upload files to Vercel Blob storage.
 
     The application will be running at `http://127.0.0.1:8000`.
 
+## Testing
+
+To run the tests for this project, follow these steps:
+
+1.  **Install test dependencies:**
+
+    ```bash
+    pip install -r tests/requirements.txt
+    ```
+
+2.  **Run the tests:**
+
+    ```bash
+    pytest tests/
+    ```
+
 ## API Endpoint
 
 ### Upload File

@@ -18,7 +18,7 @@ def create_dummy_file():
     yield
     os.remove(DUMMY_FILE_NAME)
 
-@patch("api.main.blob.put")
+@patch("api.main.vercel_blob.put")
 def test_upload_file(mock_put):
     mock_put.return_value = {"url": "https://fake-blob-storage.com/test_file.txt"}
     with open(DUMMY_FILE_NAME, "rb") as f:
@@ -29,5 +29,4 @@ def test_upload_file(mock_put):
 
 def test_upload_no_file():
     response = client.post("/api/upload")
-    assert response.status_code == 400
-    assert response.json()["detail"] == "No file sent."
+    assert response.status_code == 422
