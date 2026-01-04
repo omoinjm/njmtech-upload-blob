@@ -2,4 +2,6 @@ fastapi
 uvicorn
 python-dotenv
 vercel-blob
-python-multipartpython-multipart
+python-multipart
+pydantic
+Werkzeug

@@ -3,6 +3,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 import vercel_blob
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
@@ -17,8 +18,11 @@ async def upload(file: UploadFile = File(...)):
         # Read the file content
         contents = await file.read()
         
+        # Sanitize the filename
+        filename = secure_filename(file.filename)
+        
         # Upload the file to Vercel Blob
-        blob_result = vercel_blob.put(file.filename, contents)
+        blob_result = vercel_blob.put(filename, contents)
         
         return JSONResponse(status_code=200, content={"url": blob_result['url']})
 
