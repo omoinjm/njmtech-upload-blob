@@ -4,13 +4,13 @@
 
 This project is built using the following technologies:
 
-*   **Python**: The core programming language.
-*   **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
-*   **Vercel Blob**: A serverless, scalable, and cost-efficient object storage solution for the web.
-*   **Uvicorn**: A lightning-fast ASGI server, used to run the FastAPI application.
-*   **python-dotenv**: Manages environment variables, loading them from a `.env` file.
-*   **Werkzeug**: A comprehensive WSGI web application library, used here for secure filename handling.
-*   **Pytest**: A mature full-featured Python testing framework.
+*   🐍 **Python**: The core programming language.
+*   ⚡ **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
+*   ☁️ **Vercel Blob**: A serverless, scalable, and cost-efficient object storage solution for the web.
+*   🦄 **Uvicorn**: A lightning-fast ASGI server, used to run the FastAPI application.
+*   .env **python-dotenv**: Manages environment variables, loading them from a `.env` file.
+*   🛠️ **Werkzeug**: A comprehensive WSGI web application library, used here for secure filename handling.
+*   🧪 **Pytest**: A mature full-featured Python testing framework.
 
 
 
@@ -62,12 +62,17 @@ To run the tests for this project, follow these steps:
 
 ### Upload File
 
-*   **URL:** `/api/upload`
+*   **URL:** `/api/v1/upload`
 *   **Method:** `POST`
+*   **Headers:**
+    *   `Authorization: Bearer YOUR_API_TOKEN`
 *   **Form Data:** `file` (the file to upload)
 
 **Example using `curl`:**
 
 ```bash
-curl -X POST -F "file=@/path/to/your/file.txt" http://127.0.0.1:8000/api/upload
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -F "file=@/path/to/your/file.txt" \
+  http://127.0.0.1:8000/api/v1/upload
 ```
