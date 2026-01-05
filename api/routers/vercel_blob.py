@@ -29,7 +29,7 @@ async def upload(file: UploadFile = File(...)):
     url, stored_pathname = upload_to_blob_storage(
         file.filename,
         contents,
-        content_type=content_type,  # optional if your function supports it
+        content_type=content_type,
     )
 
     return JSONResponse(
