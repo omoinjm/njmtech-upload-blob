@@ -23,8 +23,6 @@ git config --global user.email "$GIT_USER_EMAIL" &&
 curl -Ls https://astral.sh/uv/install.sh | bash &&
   sudo ln -s "$HOME/.local/bin/uv" /usr/local/bin/uv
 
-curl -fsSL https://ollama.com/install.sh | sh
-
 # Add to PATH for both root and vscode user
 PATH="$HOME/.local/bin:${PATH}"
 

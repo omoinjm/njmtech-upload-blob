@@ -34,7 +34,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
     )
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def read_root():
     return """
     <!DOCTYPE html>
