@@ -312,13 +312,13 @@ async def upload(file: UploadFile = File(...)):
                 <div class="card">
                     <h3>Interactive API Docs</h3>
                     <p>Explore this API's endpoints with the interactive Swagger UI. Test requests and view response schemas in real-time.</p>
-                    <a href="/docs">Open Swagger UI →</a>
+                    <a href="/docs" target="_blank">Open Swagger UI →</a>
                 </div>
                 
                 <div class="card">
                     <h3>File Upload</h3>
                     <p>Access the file upload functionality through our REST API. Perfect for testing and development purposes.</p>
-                    <a href="/api/v1/demo/data">Get Data →</a>
+                    <a href="/api/v1/demo/data" target="_blank">Get Data →</a>
                 </div>
                 
             </div>
