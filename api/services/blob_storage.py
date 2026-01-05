@@ -5,7 +5,7 @@ from datetime import datetime
 
 def upload_to_blob_storage(filename: str, contents: bytes) -> tuple[str, str]:
     sanitized_filename = secure_filename(filename)
-    now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     path = f"njmtech-blob-api/{now}/{sanitized_filename}"
     blob_result = vercel_blob.put(path, contents)
     return blob_result["url"], path
