@@ -17,7 +17,7 @@ def read_root():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Vercel + FastAPI</title>
+        <title>Vercel Blob Upload</title>
         <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dfta3fn6p/image/upload/v1767616954/favicon_xezewp.ico">
         <style>
             * {
@@ -278,7 +278,7 @@ def read_root():
     <body>
         <header>
             <nav>
-                <a href="/" class="logo">Vercel + FastAPI</a>
+                <a href="/" class="logo">Vercel Blob Upload</a>
             </nav>
         </header>
         <main>
