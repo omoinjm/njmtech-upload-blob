@@ -8,7 +8,9 @@ router = APIRouter()
 
 @router.get("/")
 def read_root():
-    return {"message": "Welcome to the Vercel Blob API"}
+    return JSONResponse(
+        status_code=200, content={"message": "Welcome to the Vercel Blob API"}
+    )
 
 
 @router.get("/files", dependencies=[Depends(verify_token)])

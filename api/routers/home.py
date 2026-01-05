@@ -17,7 +17,7 @@ def read_root():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Vercel Blob Upload</title>
+        <title>Vercel blob upload</title>
         <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dfta3fn6p/image/upload/v1767616954/favicon_xezewp.ico">
         <style>
             * {
@@ -55,6 +55,11 @@ def read_root():
                 font-weight: 600;
                 color: #ffffff;
                 text-decoration: none;
+            }
+
+            .logo img {
+                 width: 15vw;
+                height: auto;
             }
             
             .nav-links {
@@ -278,7 +283,9 @@ def read_root():
     <body>
         <header>
             <nav>
-                <a href="/" class="logo">Vercel Blob Upload</a>
+                <a href="/" class="logo">
+                    <img src="https://res.cloudinary.com/dfta3fn6p/image/upload/c_crop,ar_16:9/v1676064214/public/logo/NJMTECHw_jdxtl0.png" alt="logo image" />
+                </a>
             </nav>
         </header>
         <main>
@@ -305,7 +312,7 @@ def read_root():
                 <div class="card">
                     <h3>File Upload</h3>
                     <p>Access the file upload functionality through our REST API. Perfect for testing and development purposes.</p>
-                    <a href="/api/upload">Get Data →</a>
+                    <a href="/api/v1/demo/data">Get Data →</a>
                 </div>
                 
             </div>
