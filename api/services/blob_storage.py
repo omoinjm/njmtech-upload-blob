@@ -11,7 +11,7 @@ def upload_to_blob_storage(filename: str, contents: bytes) -> tuple[str, str]:
 
 def list_blobs():
     result = vercel_blob.list()
-
+    # Filter by prefix manually after getting results
     formatted_blobs = []
     for blob in result.get('blobs', []):
         # Filter by prefix manually after getting results
@@ -21,5 +21,4 @@ def list_blobs():
                 "url": blob.get('url'),
                 "path": blob.get('pathname')
          })
-
     return formatted_blobs
