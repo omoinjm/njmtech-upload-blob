@@ -18,7 +18,7 @@ def read_root():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Vercel + FastAPI</title>
-        <link rel="icon" type="image/x-icon" href="../favicon.ico">
+        <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dfta3fn6p/image/upload/v1767616954/favicon_xezewp.ico">
         <style>
             * {
                 margin: 0;
