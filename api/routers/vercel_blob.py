@@ -21,6 +21,23 @@ async def list_files():
 @router.post("/upload", dependencies=[Depends(verify_token)])
 async def upload(file: UploadFile = File(...)):
     contents = await file.read()
-    url, _ = upload_to_blob_storage(file.filename, contents)
 
-    return JSONResponse(status_code=200, content={"url": url})
+    file_size = len(contents)
+    content_type = file.content_type
+    pathname = file.filename
+
+    url, stored_pathname = upload_to_blob_storage(
+        file.filename,
+        contents,
+        content_type=content_type,  # optional if your function supports it
+    )
+
+    return JSONResponse(
+        status_code=200,
+        content={
+            "url": url,
+            "pathname": stored_pathname or pathname,
+            "content_type": content_type,
+            "size": file_size,
+        },
+    )
