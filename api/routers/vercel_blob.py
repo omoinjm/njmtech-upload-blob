@@ -2,6 +2,7 @@ from fastapi import APIRouter, UploadFile, File, Depends
 from fastapi.responses import JSONResponse
 from ..dependencies import verify_token
 from ..services.blob_storage import upload_to_blob_storage, list_blobs
+from ..helpers.blob import get_filename
 
 router = APIRouter()
 
@@ -27,9 +28,8 @@ async def upload(file: UploadFile = File(...)):
     pathname = file.filename
 
     url, stored_pathname = upload_to_blob_storage(
-        file.filename,
+        get_filename(file),
         contents,
-        content_type=content_type,
     )
 
     return JSONResponse(
