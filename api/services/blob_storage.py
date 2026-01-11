@@ -1,6 +1,6 @@
 import vercel_blob
 from werkzeug.utils import secure_filename
-from datetime import datetime
+# from datetime import datetime
 
 
 def upload_to_blob_storage(
@@ -8,9 +8,9 @@ def upload_to_blob_storage(
 ) -> tuple[str, str]:
     sanitized_filename = secure_filename(filename)
 
-    now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    # now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
-    path = f"njmtech-blob-api/{blob_path}/{now}/{sanitized_filename}"
+    path = f"njmtech-blob-api/{blob_path}/{sanitized_filename}.txt"
     blob_result = vercel_blob.put(path, contents)
     return blob_result["url"], path
 
