@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, Query
 from fastapi.responses import JSONResponse
 from ..dependencies import verify_token
 from ..services.blob_storage import upload_to_blob_storage, list_blobs
@@ -20,7 +20,7 @@ async def list_files():
 
 
 @router.post("/upload", dependencies=[Depends(verify_token)])
-async def upload(blob_path: str, file: UploadFile = File(...)):
+async def upload(blob_path: str = Query(...), file: UploadFile = File(...)):
     contents = await file.read()
 
     file_size = len(contents)
