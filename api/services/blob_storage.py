@@ -3,10 +3,14 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 
-def upload_to_blob_storage(filename: str, contents: bytes) -> tuple[str, str]:
+def upload_to_blob_storage(
+    filename: str, contents: bytes, blob_path: str
+) -> tuple[str, str]:
     sanitized_filename = secure_filename(filename)
+
     now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    path = f"njmtech-blob-api/{now}/{sanitized_filename}"
+
+    path = f"njmtech-blob-api/{blob_path}/{now}/{sanitized_filename}"
     blob_result = vercel_blob.put(path, contents)
     return blob_result["url"], path
 
