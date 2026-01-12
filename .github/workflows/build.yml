@@ -21,7 +21,7 @@ jobs:
           API_TOKEN: ${{ secrets.API_TOKEN }}
         run: |
           pip install pytest
-          pytest
+          pytest tests/
   docker:
     needs: build-and-test
     runs-on: ubuntu-latest
