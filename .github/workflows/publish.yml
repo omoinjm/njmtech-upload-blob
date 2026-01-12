@@ -1,0 +1,57 @@
+name: Python Package Release
+on:
+  push:
+    branches: ["main", "master", "production", "staging", "development"]
+permissions:
+  contents: write
+  packages: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Get next version
+        id: versioning
+        uses: reecetech/version-increment@2024.10.1
+        with:
+          scheme: semver
+          increment: patch
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Update version in package
+        run: |
+          VERSION=${{ steps.versioning.outputs.next_version }}
+          echo "__version__ = '${VERSION#v}'" > src/__version__.py
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to GitHub Packages
+        env:
+          TWINE_USERNAME: ${{ github.actor }}
+          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
+          twine upload --repository-url https://maven.pkg.github.com/${{ github.repository_owner }} dist/*
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.versioning.outputs.next_version }}
+          files: dist/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
