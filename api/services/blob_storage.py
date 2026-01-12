@@ -16,14 +16,10 @@ def upload_to_blob_storage(
 
 
 def list_blobs():
-    result = vercel_blob.list()
-    # Filter by prefix manually after getting results
+    result = vercel_blob.list(prefix="njmtech-blob-api/")
     formatted_blobs = []
     for blob in result.get("blobs", []):
-        # Filter by prefix manually after getting results
-        pathname = blob.get("pathname", "")
-        if pathname.startswith("njmtech-blob-api/"):
-            formatted_blobs.append(
-                {"url": blob.get("url"), "path": blob.get("pathname")}
-            )
+        formatted_blobs.append(
+            {"url": blob.get("url"), "path": blob.get("pathname")}
+        )
     return formatted_blobs
