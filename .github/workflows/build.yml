@@ -1,9 +1,7 @@
 name: Python Docker CI
-
 on:
   push:
     branches: ["development", "staging"]
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -19,10 +17,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run tests
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
         run: |
           pip install pytest
           pytest
-
   docker:
     needs: build-and-test
     runs-on: ubuntu-latest
