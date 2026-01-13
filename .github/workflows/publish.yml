@@ -1,5 +1,4 @@
 name: Python Package Release
-
 on:
   push:
     tags:
@@ -8,6 +7,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write # For trusted publishing
 
 jobs:
   release:
@@ -23,39 +23,57 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Get next version
-        id: versioning
-        uses: reecetech/version-increment@2024.10.1
-        with:
-          scheme: semver
-          increment: patch
-
       - name: Install build dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build twine
-
-      - name: Update version in package
-        run: |
-          VERSION=${{ steps.versioning.outputs.next_version }}
-          echo "__version__ = '${VERSION#v}'" > api/__version__.py
+        run: python -m pip install --upgrade pip
 
       - name: Build package
         run: python -m build
 
-      - name: Publish to GitHub Packages
-        env:
-          TWINE_USERNAME: ${{ github.actor }}
-          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
-          twine upload --repository-url https://maven.pkg.github.com/${{ github.repository_owner }} dist/*
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v5
         with:
-          tag_name: ${{ steps.versioning.outputs.next_version }}
-          files: dist/*
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: python-package-distributions
+          path: dist/
+
+  publish-to-pypi:
+    needs: release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
+    environment:
+      name: pypi
+      url: https://pypi.org/p/njmtech-upload-blob
+    permissions:
+      id-token: write # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  publish-to-testpypi:
+    name: Publish Python 🐍 distribution 📦 to TestPyPI
+    needs:
+      - release
+    runs-on: ubuntu-latest
+
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/njmtech-upload-blob
+
+    permissions:
+      id-token: write # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
