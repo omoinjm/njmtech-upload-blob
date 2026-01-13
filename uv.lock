@@ -509,6 +509,31 @@ wheels = [
 ]
 
 [[package]]
+name = "njmtech-upload-blob"
+version = "0.1.1"
+source = { virtual = "." }
+dependencies = [
+    { name = "fastapi", extra = ["standard"] },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "python-multipart" },
+    { name = "uvicorn" },
+    { name = "vercel-blob" },
+    { name = "werkzeug" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", extras = ["standard"] },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "python-multipart" },
+    { name = "uvicorn" },
+    { name = "vercel-blob" },
+    { name = "werkzeug" },
+]
+
+[[package]]
 name = "pydantic"
 version = "2.12.5"
 source = { registry = "https://pypi.org/simple" }
@@ -1038,31 +1063,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/42/bd/d299ee6ef69db7b3b6bd636e592ea0f5d87d65f0a9a69f68db4818117265/vercel_blob-0.4.2.tar.gz", hash = "sha256:1c8e24c618cb62d7ddaa91d6a01b94bd5e8856ed0cfc7525fb6bfe064e2790c6", size = 15281, upload-time = "2025-06-07T06:16:06.891Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5d/19/fadf607014ab74305e1eb91027215401d65b29af7e1f67cb4d1c17785796/vercel_blob-0.4.2-py3-none-any.whl", hash = "sha256:4150fc596b198489529275de46e577353a200fb292a39b9aecb76f76425fc05d", size = 15655, upload-time = "2025-06-07T06:16:05.343Z" },
-]
-
-[[package]]
-name = "vercel-blob-api"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "fastapi", extra = ["standard"] },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "python-multipart" },
-    { name = "uvicorn" },
-    { name = "vercel-blob" },
-    { name = "werkzeug" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastapi", extras = ["standard"] },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "python-multipart" },
-    { name = "uvicorn" },
-    { name = "vercel-blob" },
-    { name = "werkzeug" },
 ]
 
 [[package]]
