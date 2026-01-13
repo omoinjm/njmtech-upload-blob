@@ -38,7 +38,7 @@ jobs:
       - name: Update version in package
         run: |
           VERSION=${{ steps.versioning.outputs.next_version }}
-          echo "__version__ = '${VERSION#v}'" > src/__version__.py
+          echo "__version__ = '${VERSION#v}'" > api/__version__.py
 
       - name: Build package
         run: python -m build
