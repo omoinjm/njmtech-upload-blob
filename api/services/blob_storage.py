@@ -4,14 +4,14 @@ from werkzeug.utils import secure_filename
 
 
 def upload_to_blob_storage(
-    filename: str, contents: bytes, blob_path: str
+    filename: str, contents: bytes, blob_path: str, allow_overwrite: bool = False
 ) -> tuple[str, str]:
     sanitized_filename = secure_filename(filename)
 
     # now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
     path = f"njmtech-blob-api/{blob_path}/{sanitized_filename}.txt"
-    blob_result = vercel_blob.put(path, contents)
+    blob_result = vercel_blob.put(path, contents, {"allowOverwrite": allow_overwrite})
     return blob_result["url"], path
 
 

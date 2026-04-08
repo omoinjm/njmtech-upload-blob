@@ -20,7 +20,11 @@ async def list_files():
 
 
 @router.post("/upload", dependencies=[Depends(verify_token)])
-async def upload(blob_path: str = Query(...), file: UploadFile = File(...)):
+async def upload(
+    blob_path: str = Query(...),
+    allow_overwrite: bool = Query(False),
+    file: UploadFile = File(...),
+):
     contents = await file.read()
 
     file_size = len(contents)
@@ -31,6 +35,7 @@ async def upload(blob_path: str = Query(...), file: UploadFile = File(...)):
         get_filename(file),
         contents,
         blob_path,
+        allow_overwrite=allow_overwrite,
     )
 
     return JSONResponse(
