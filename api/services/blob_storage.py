@@ -57,3 +57,15 @@ def list_blobs():
     # Sort by path for consistent output
     sorted_groups = [groups[k] for k in sorted(groups.keys())]
     return sorted_groups
+
+
+def delete_from_blob_storage(path: str):
+    # resolve path to url by listing
+    options = {"prefix": path}
+    result = vercel_blob.list(options)
+    blobs = result.get("blobs", [])
+    for blob in blobs:
+        if blob.get("pathname") == path:
+            vercel_blob.delete(blob.get("url"))
+            return True
+    return False
