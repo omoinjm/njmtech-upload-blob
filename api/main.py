@@ -5,7 +5,21 @@ from fastapi.responses import JSONResponse
 from .routers import vercel_blob, home, data
 from .middleware.error_handling_middleware import ErrorHandlingMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title="NJMTECH Vercel Blob API",
+    description="""
+    A simple API for interacting with Vercel Blob storage.
+    
+    ## Authentication
+    All blob-related endpoints require a Bearer Token in the `Authorization` header.
+    
+    ## Features
+    * **List Files**: Retrieve a grouped list of all files in the storage.
+    * **Upload**: Upload files directly to a specified path.
+    * **Delete**: Delete blobs by their absolute path.
+    """,
+    version="1.0.0",
+)
 
 
 app.add_middleware(ErrorHandlingMiddleware)

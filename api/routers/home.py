@@ -1,16 +1,18 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, HTMLResponse
 
-router = APIRouter()
+router = APIRouter(tags=["System"])
 
 
-@router.get("/health")
+@router.get("/health", summary="Health check")
 async def health_check():
+    """Checks if the service is up and running."""
     return JSONResponse(status_code=200, content={"status": "ok"})
 
 
-@router.get("/", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse, summary="Home page")
 def read_root():
+    """Returns the landing page HTML."""
     return """
     <!DOCTYPE html>
     <html lang="en">

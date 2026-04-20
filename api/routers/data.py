@@ -2,11 +2,12 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
-router = APIRouter()
+router = APIRouter(tags=["Demo"])
 
 
-@router.get("/data")
+@router.get("/data", summary="Demo data")
 async def demo_data():
+    """Returns a collection of demo users, products, and metrics."""
     demo_content = {
         "status": "ok",
         "data": {

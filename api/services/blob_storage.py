@@ -8,7 +8,14 @@ def upload_to_blob_storage(
 ) -> tuple[str, str]:
     sanitized_filename = secure_filename(filename)
 
-    path = f"njmtech-blob-api/{blob_path}/{sanitized_filename}.txt"
+    # Check if the filename already has a markdown extension
+    if sanitized_filename.lower().endswith((".md", ".markdown")):
+        # Save without appending .txt
+        path = f"njmtech-blob-api/{blob_path}/{sanitized_filename}"
+    else:
+        # Maintain existing logic for all other files
+        path = f"njmtech-blob-api/{blob_path}/{sanitized_filename}.txt"
+
     blob_result = vercel_blob.put(path, contents, {"allowOverwrite": allow_overwrite})
     return blob_result["url"], path
 
