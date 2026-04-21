@@ -1,6 +1,34 @@
 import vercel_blob
 from werkzeug.utils import secure_filename
 from pathlib import Path
+import os
+import redis
+import json
+
+# Initialize Redis client
+REDIS_URL = os.environ.get("REDIS_URL")
+r = redis.Redis.from_url(REDIS_URL) if REDIS_URL else None
+CACHE_KEY = "blob_files_cache"
+CACHE_TTL = 86400  # 24 hours
+
+
+def get_cached_blobs():
+    if not r:
+        return None
+    cached_data = r.get(CACHE_KEY)
+    if cached_data:
+        return json.loads(cached_data)
+    return None
+
+
+def set_cached_blobs(data):
+    if r:
+        r.set(CACHE_KEY, json.dumps(data), ex=CACHE_TTL)
+
+
+def invalidate_cache():
+    if r:
+        r.delete(CACHE_KEY)
 
 
 def upload_to_blob_storage(
@@ -17,10 +45,19 @@ def upload_to_blob_storage(
         path = f"njmtech-blob-api/{blob_path}/{sanitized_filename}.txt"
 
     blob_result = vercel_blob.put(path, contents, {"allowOverwrite": allow_overwrite})
+
+    # Invalidate cache on new upload
+    invalidate_cache()
+
     return blob_result["url"], path
 
 
 def list_blobs():
+    # Try to get from cache first
+    cached_data = get_cached_blobs()
+    if cached_data is not None:
+        return cached_data
+
     # Wrap the prefix in an options dictionary
     options = {"prefix": "njmtech-blob-api/"}
     result = vercel_blob.list(options)
@@ -63,16 +100,21 @@ def list_blobs():
 
     # Sort by path for consistent output
     sorted_groups = [groups[k] for k in sorted(groups.keys())]
+
+    # Save to cache
+    set_cached_blobs(sorted_groups)
+
     return sorted_groups
 
 
-def delete_from_blob_storage(path: str):
-    # resolve path to url by listing
-    options = {"prefix": path}
-    result = vercel_blob.list(options)
-    blobs = result.get("blobs", [])
-    for blob in blobs:
-        if blob.get("pathname") == path:
-            vercel_blob.delete(blob.get("url"))
-            return True
-    return False
+def delete_from_blob_storage(url: str):
+    """
+    Deletes a blob directly using its URL.
+    This saves one Advanced Operation by avoiding the list() call.
+    """
+    try:
+        vercel_blob.delete(url)
+        invalidate_cache()
+        return True
+    except Exception:
+        return False

@@ -10,6 +10,12 @@
       "src": "/(.*)",
       "dest": "api/main.py"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/refresh-cache",
+      "schedule": "0 0 * * *"
+    }
   ]
 }
 

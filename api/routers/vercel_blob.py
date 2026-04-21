@@ -30,19 +30,19 @@ async def list_files():
 
 @router.delete("/delete", dependencies=[Depends(verify_token)], summary="Delete a blob")
 async def delete_blob(
-    path: str = Query(..., description="The absolute pathname of the blob to delete")
+    url: str = Query(..., description="The absolute URL of the blob to delete")
 ):
     """
-    Deletes a single blob from storage using its absolute pathname.
-    Returns 404 if the path is not found.
+    Deletes a single blob from storage using its absolute URL.
+    Returns 404 if deletion fails.
     """
-    success = delete_from_blob_storage(path)
+    success = delete_from_blob_storage(url)
     if success:
         return JSONResponse(
             status_code=200, content={"message": "Blob deleted successfully"}
         )
     else:
-        return JSONResponse(status_code=404, content={"message": "Blob not found"})
+        return JSONResponse(status_code=404, content={"message": "Blob not found or deletion failed"})
 
 
 @router.post("/upload", dependencies=[Depends(verify_token)], summary="Upload a file")

@@ -104,33 +104,35 @@ def test_list_files(test_env):
 def test_delete_blob(test_env):
     with patch("api.routers.vercel_blob.delete_from_blob_storage") as mock_delete_from_blob_storage:
         client = test_env
-        path = "njmtech-blob-api/test.txt"
+        url = "https://fake-blob-storage.com/njmtech-blob-api/test.txt"
         mock_delete_from_blob_storage.return_value = True
         headers = {"Authorization": f"Bearer {API_TOKEN}"}
-        response = client.delete(f"/api/v1/blob/delete?path={path}", headers=headers)
+        response = client.delete(f"/api/v1/blob/delete?url={url}", headers=headers)
         assert response.status_code == 200
         assert response.json() == {"message": "Blob deleted successfully"}
-        mock_delete_from_blob_storage.assert_called_once_with(path)
+        mock_delete_from_blob_storage.assert_called_once_with(url)
 
 def test_delete_blob_not_found(test_env):
     with patch("api.routers.vercel_blob.delete_from_blob_storage") as mock_delete_from_blob_storage:
         client = test_env
-        path = "njmtech-blob-api/missing.txt"
+        url = "https://fake-blob-storage.com/njmtech-blob-api/missing.txt"
         mock_delete_from_blob_storage.return_value = False
         headers = {"Authorization": f"Bearer {API_TOKEN}"}
-        response = client.delete(f"/api/v1/blob/delete?path={path}", headers=headers)
+        response = client.delete(f"/api/v1/blob/delete?url={url}", headers=headers)
         assert response.status_code == 404
-        assert response.json() == {"message": "Blob not found"}
-        mock_delete_from_blob_storage.assert_called_once_with(path)
+        assert response.json() == {"message": "Blob not found or deletion failed"}
+        mock_delete_from_blob_storage.assert_called_once_with(url)
 
 def test_list_files_prefix(test_env):
-    with patch("api.services.blob_storage.vercel_blob.list") as mock_vercel_blob_list:
+    with patch("api.services.blob_storage.vercel_blob.list") as mock_vercel_blob_list, \
+         patch("api.services.blob_storage.r") as mock_redis:
+        mock_redis.get.return_value = None  # Force cache miss
         client = test_env
         mock_vercel_blob_list.return_value = {"blobs": []}
         headers = {"Authorization": f"Bearer {API_TOKEN}"}
         response = client.get("/api/v1/blob/files", headers=headers)
         assert response.status_code == 200
-        mock_vercel_blob_list.assert_called_once_with(prefix="njmtech-blob-api/")
+        mock_vercel_blob_list.assert_called_once_with({"prefix": "njmtech-blob-api/"})
 
 def test_upload_file_blob_storage_error(test_env):
     with patch("api.routers.vercel_blob.upload_to_blob_storage") as mock_upload_to_blob_storage:
