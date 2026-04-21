@@ -56,7 +56,7 @@ def list_blobs():
             groups[parent_dir]["timestamp"] = uploaded_at
 
         # Map files based on suffix
-        if filename.endswith(".md.txt"):
+        if filename.endswith(".md"):
             groups[parent_dir]["md_url"] = url
         elif filename.endswith(".txt"):
             groups[parent_dir]["txt_url"] = url
